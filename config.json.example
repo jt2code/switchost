@@ -1,0 +1,14 @@
+{
+    "hosts": [
+        {
+            "name": "test-local",
+            "type": "local",
+            "uri": "/your/hosts/file/path/test.hosts"
+        },
+        {
+            "name": "test-remote",
+            "type": "remote",
+            "uri": "https://your.server.com/test"
+        }
+    ]
+}
