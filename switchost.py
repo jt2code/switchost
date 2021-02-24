@@ -31,10 +31,13 @@ if __name__ == '__main__':
     host_config_name = None
     if len(sys.argv) > 1:
         host_config_name = sys.argv[1]
+        if host_config_name == '--current ':
+            print(common.get_state())
+            exit(0)
 
     hosts = config.load(common.config_file_path)
     conf = hosts.get(host_config_name)
     if not conf:
-        print('Usage', sys.argv[0], '{%s}' % '|'.join(hosts.keys()))
+        print('Usage', sys.argv[0], '{ --current | %s }' % ' | '.join(hosts.keys()))
         exit(1)
     update(conf, host_config_name)
