@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import argparse
 import common
 import config
 
@@ -28,16 +29,27 @@ def update(conf: dict, name: str) -> None:
 
 
 if __name__ == '__main__':
-    host_config_name = None
-    if len(sys.argv) > 1:
-        host_config_name = sys.argv[1]
-        if host_config_name == '--current ':
-            print(common.get_state())
-            exit(0)
+    parse = argparse.ArgumentParser()
+    parse.add_argument('-a', '--all', dest='_all', action='store_true',
+                       help='show all hosts names from `config.json`')
+    parse.add_argument('-s', '--current', dest='_current',
+                       action='store_true', help='show current state')
+    parse.add_argument('name', nargs='?', type=str, help='hosts config name')
+    args = parse.parse_args()
+
+    if args._current:
+        print(' ', common.get_state())
+        exit(0)
 
     hosts = config.load(common.config_file_path)
-    conf = hosts.get(host_config_name)
+    if args._all:
+        for k in hosts.keys():
+            print(' ', k)
+        exit(0)
+
+    conf = hosts.get(args.name)
     if not conf:
-        print('Usage', sys.argv[0], '{ --current | %s }' % ' | '.join(hosts.keys()))
+        parse.print_help()
         exit(1)
-    update(conf, host_config_name)
+
+    update(conf, args.name)
