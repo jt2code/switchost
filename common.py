@@ -31,3 +31,7 @@ def get_state() -> str:
 def set_state(state: str) -> None:
     with open(state_file_path, 'w') as f:
         f.write(state.strip())
+
+
+def indent_print(s, **kwargs):
+    print(' ', s, **kwargs)

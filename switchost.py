@@ -10,9 +10,8 @@ def rewrite_hosts_file(hosts_content: str) -> None:
     try:
         with open(common.get_hosts_path(), 'w') as f:
             f.write(hosts_content)
-    except PermissionError as e:
-        print(e)
-        print('    Please try `sudo %s`' % sys.argv[0])
+    except PermissionError:
+        common.indent_print('please try `sudo %s`' % sys.argv[0])
         exit(1)
 
 
@@ -23,7 +22,7 @@ def update(conf: dict, name: str) -> None:
     else:
         content = common.http_get(conf['uri'])
     if not content:
-        print('load hosts file error:', conf['uri'])
+        common.indent_print('load hosts file error: %s' % conf['uri'])
     rewrite_hosts_file(content)
     common.set_state(name)
 
@@ -38,13 +37,13 @@ if __name__ == '__main__':
     args = parse.parse_args()
 
     if args._current:
-        print(' ', common.get_state())
+        common.indent_print(common.get_state())
         exit(0)
 
     hosts = config.load(common.config_file_path)
     if args._all:
         for k in hosts.keys():
-            print(' ', k)
+            common.indent_print(k)
         exit(0)
 
     conf = hosts.get(args.name)
